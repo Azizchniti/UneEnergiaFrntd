@@ -1,0 +1,98 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 215 85% 50%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 215 85% 40%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 20% 40%;
+
+    --accent: 215 85% 96%;
+    --accent-foreground: 215 85% 40%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215 85% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 215 85% 50%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 215 85% 96%;
+    --sidebar-accent-foreground: 215 85% 40%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 215 85% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: "Raleway", sans-serif;
+    @apply bg-background text-foreground antialiased min-h-screen;
+  }
+
+  /* Smooth appearance for all elements */
+  * {
+    @apply transition-all duration-200;
+  }
+
+  /* Glass effect classes */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-glass;
+  }
+
+  .glass-dark {
+    @apply bg-black/10 backdrop-blur-md border border-white/10 shadow-glass;
+  }
+
+  /* Neomorphic effects */
+  .neo {
+    @apply bg-white shadow-neo rounded-xl;
+  }
+
+  .neo-inset {
+    @apply bg-white shadow-neo-inset rounded-xl;
+  }
+
+  /* Animations */
+  .page-transition-enter {
+    @apply opacity-0;
+  }
+  
+  .page-transition-enter-active {
+    @apply opacity-100 transition-opacity duration-300;
+  }
+  
+  .page-transition-exit {
+    @apply opacity-100;
+  }
+  
+  .page-transition-exit-active {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+}
