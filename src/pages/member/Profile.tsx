@@ -150,9 +150,7 @@ return (
           {member.first_name} {member.last_name}
         </h1>
 
-        <p className="text-sm text-white/50 mt-1">
-          {member.grade || "Membro"}
-        </p>
+        
       </div>
 
       {/* EDIT BUTTON */}
