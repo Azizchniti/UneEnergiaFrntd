@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import { generateId } from "@/utils/dataUtils";
 import { EducationService } from "@/services/EducationService";
-import { Course, Class, Certification, LearningPath } from "@/types/education.types";
+import { Course, Class, Certification, LearningPath, LearningMaterial } from "@/types/education.types";
 import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from 'keen-slider/react'
 
@@ -55,7 +55,7 @@ const MemberGraduation: React.FC = () => {
  const [classes, setClasses] = useState<Class[]>([]);
  const [certifications, setCertifications] = useState<Certification[]>([]);
  const [paths, setPaths] = useState<LearningPath[]>([]);
- 
+   const [materials, setMaterials] = useState<LearningMaterial[]>([]);
    const [sliderRef] = useKeenSlider({
     loop: true,
   
@@ -65,6 +65,7 @@ const MemberGraduation: React.FC = () => {
    EducationService.getClasses().then(setClasses);
    EducationService.getCertifications().then(setCertifications);
    EducationService.getPaths().then(setPaths);
+   EducationService.getAllMaterials().then(setMaterials);
  }, []);
 
   const [newCourse, setNewCourse] = useState<Partial<Course>>({
@@ -95,22 +96,13 @@ const MemberGraduation: React.FC = () => {
     steps: []
   });
 
-  const [isEditingCourse, setIsEditingCourse] = useState(false);
-  const [isEditingClass, setIsEditingClass] = useState(false);
-  const [isEditingCertification, setIsEditingCertification] = useState(false);
-  const [isEditingPath, setIsEditingPath] = useState(false);
-
-  const [courseDialogOpen, setCourseDialogOpen] = useState(false);
-  const [classDialogOpen, setClassDialogOpen] = useState(false);
-  const [certificationDialogOpen, setCertificationDialogOpen] = useState(false);
-  const [pathDialogOpen, setPathDialogOpen] = useState(false);
-
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedCourseClasses, setSelectedCourseClasses] = useState<Class[]>([]);
   const [currentClassIndex, setCurrentClassIndex] = useState<number>(0);
   const courseContentRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([]);
   const [input, setInput] = useState("");
+
   
   // Map of lesson title → chunk filename
 
@@ -169,7 +161,19 @@ const handleViewCourse = async (course: Course) => {
   }
 };
 
+const formatDriveUrl = (url: string): string => {
+  if (url.includes("docs.google.com/document")) {
+    const id = url.split("/d/")[1].split("/")[0];
+    return `https://docs.google.com/document/d/${id}/export?format=pdf`;
+  }
 
+  if (url.includes("drive.google.com/file")) {
+    const id = url.split("/d/")[1].split("/")[0];
+    return `https://drive.google.com/uc?export=download&id=${id}`;
+  }
+
+  return url;
+};
 
   return (
     <div className="space-y-6">
@@ -179,17 +183,7 @@ const handleViewCourse = async (course: Course) => {
           Gerencie os conteúdos educacionais para a graduação dos membros
         </p>
       </div>
-      {/* <div ref={sliderRef} className="keen-slider h-[45vh] rounded-xl overflow-hidden shadow-md">
-  {[
-    "/Banner1.png",
-    "/Banner2.png",
-    "/Banner3.png"
-  ].map((img, index) => (
-    <div key={index} className="keen-slider__slide">
-      <img src={img} alt={`Banner ${index + 1}`} className="w-full h-full object-cover" />
-    </div>
-  ))}
-</div> */}
+
 
       <Tabs defaultValue="courses" className="space-y-4">
         <TabsList>
@@ -205,6 +199,10 @@ const handleViewCourse = async (course: Course) => {
             <Book className="mr-2 h-4 w-4" />
             Trilhas
           </TabsTrigger>
+          <TabsTrigger value="materials">
+            <FileText className="mr-2 h-4 w-4" />
+            Materiais
+</TabsTrigger>
         </TabsList>
 
         {/* Cursos */}
@@ -390,20 +388,20 @@ const handleViewCourse = async (course: Course) => {
                           <TableCell className="max-w-xs truncate">{cls.description}</TableCell>
                           <TableCell>{cls.duration} min</TableCell>
                          <TableCell className="max-w-sm">
-  {cls.video_url ? (
-    <div className="aspect-video w-full">
-      <iframe
-        src={getEmbedUrl(cls.video_url)}
-        title="Vídeo da aula"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        className="w-full h-full rounded-md"
-      ></iframe>
-    </div>
-  ) : (
-    "Sem vídeo"
-  )}
-</TableCell>
+                              {cls.video_url ? (
+                                <div className="aspect-video w-full">
+                                  <iframe
+                                    src={getEmbedUrl(cls.video_url)}
+                                    title="Vídeo da aula"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="w-full h-full rounded-md"
+                                  ></iframe>
+                                </div>
+                              ) : (
+                                "Sem vídeo"
+                              )}
+                            </TableCell>
 
                           <TableCell>
                             {cls.materials.length > 0 ? 
@@ -577,6 +575,36 @@ const handleViewCourse = async (course: Course) => {
             </CardContent>
           </Card>
         </TabsContent>
+        {/* meterials */}
+        <TabsContent value="materials">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {materials.map((material) => (
+                <Card key={material.id}>
+                  <CardHeader>
+                    <CardTitle className="text-base">{material.title}</CardTitle>
+                    <CardDescription>
+                      {material.type === "file" ? "📄 Arquivo" : "🔗 Link"}
+                    </CardDescription>
+                  </CardHeader>
+
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      {material.description}
+                    </p>
+                  </CardContent>
+
+                  <CardFooter>
+                    <Button
+                          className="w-full bg-emerald-500 hover:bg-emerald-600"
+                          onClick={() => window.open(formatDriveUrl(material.url), "_blank")}
+                        >
+                          Baixar
+                        </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
       </Tabs>
     </div>
   );

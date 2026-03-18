@@ -51,3 +51,15 @@ export interface LearningPath  {
     order: number;
   }[];
 }
+export type MaterialType = "file" | "link";
+
+export interface LearningMaterial {
+  id: string;
+  learning_path_id: string; // links to a LearningPath
+  title: string;
+  description?: string;
+  url: string; // Google Drive link or any file URL
+  type: MaterialType;
+  created_at: string;
+  updated_at: string;
+}

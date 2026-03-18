@@ -63,6 +63,7 @@ useEffect(() => {
   EducationService.getClasses().then(setClasses);
   EducationService.getCertifications().then(setCertifications);
   EducationService.getPaths().then(setPaths);
+  EducationService.getAllMaterials().then(setMaterials);
 }, []);
 
   const [newCourse, setNewCourse] = useState<Partial<Course> & { imageFile?: File }>({
@@ -103,6 +104,17 @@ useEffect(() => {
   const [classDialogOpen, setClassDialogOpen] = useState(false);
   const [certificationDialogOpen, setCertificationDialogOpen] = useState(false);
   const [pathDialogOpen, setPathDialogOpen] = useState(false);
+  const [isEditingMaterial, setIsEditingMaterial] = useState(false);
+const [editingMaterialId, setEditingMaterialId] = useState<string | null>(null);
+
+  const [materials, setMaterials] = useState<any[]>([]);
+    const [newMaterial, setNewMaterial] = useState({
+      title: "",
+      description: "",
+      url: "",
+      path_id: ""
+    });
+    const [materialDialogOpen, setMaterialDialogOpen] = useState(false);
 
  const handleAddCourse = async () => {
   if (!newCourse.title || !newCourse.description) {
@@ -425,6 +437,38 @@ function getEmbedUrl(url: string): string {
   }
 }
 
+const handleAddMaterial = async () => {
+  try {
+    if (!newMaterial.title || !newMaterial.url) {
+      toast.error("Título e URL são obrigatórios");
+      return;
+    }
+
+    if (isEditingMaterial && editingMaterialId) {
+      const updated = await EducationService.updateMaterial(editingMaterialId, newMaterial);
+
+      setMaterials(prev =>
+        prev.map(m => (m.id === editingMaterialId ? updated : m))
+      );
+
+      toast.success("Material atualizado");
+    } else {
+      const created = await EducationService.createMaterial(newMaterial);
+      setMaterials(prev => [created, ...prev]);
+      toast.success("Material criado");
+    }
+
+    // reset
+    setNewMaterial({ title: "", description: "", url: "", path_id: "" });
+    setIsEditingMaterial(false);
+    setEditingMaterialId(null);
+    setMaterialDialogOpen(false);
+
+  } catch (err) {
+    toast.error("Erro ao salvar material");
+  }
+};
+
 
 
   return (
@@ -446,6 +490,7 @@ function getEmbedUrl(url: string): string {
             <Video className="mr-2 h-4 w-4" />
             Aulas
           </TabsTrigger>
+          
           {/* <TabsTrigger value="certifications">
             <GraduationCap className="mr-2 h-4 w-4" />
             Certificações
@@ -454,6 +499,10 @@ function getEmbedUrl(url: string): string {
             <Book className="mr-2 h-4 w-4" />
             Trilhas
           </TabsTrigger>
+          <TabsTrigger value="materials">
+          <FileText className="mr-2 h-4 w-4" />
+          Materiais
+        </TabsTrigger>
         </TabsList>
 
         {/* Cursos */}
@@ -717,12 +766,12 @@ function getEmbedUrl(url: string): string {
               </p>
             </div>
 
-    </div>
-  )}
-</CardContent>
+            </div>
+          )}
+        </CardContent>
 
-  </Card>
-)}
+          </Card>
+        )}
 
         </TabsContent>
 
@@ -1285,6 +1334,152 @@ function getEmbedUrl(url: string): string {
                   ))
                 )}
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        {/* materials */}
+                <TabsContent value="materials">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Materiais</CardTitle>
+
+              <Dialog open={materialDialogOpen} onOpenChange={setMaterialDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Adicionar Material
+                  </Button>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Adicionar Material</DialogTitle>
+                    <DialogDescription>
+                      Insira um link do Google Drive ou PDF
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="grid gap-4 py-4">
+                    <Input
+                      placeholder="Título"
+                      value={newMaterial.title}
+                      onChange={(e) => setNewMaterial({...newMaterial, title: e.target.value})}
+                    />
+
+                    <Textarea
+                      placeholder="Descrição"
+                      value={newMaterial.description}
+                      onChange={(e) => setNewMaterial({...newMaterial, description: e.target.value})}
+                    />
+
+                    <Input
+                      placeholder="URL (Google Drive, PDF...)"
+                      value={newMaterial.url}
+                      onChange={(e) => setNewMaterial({...newMaterial, url: e.target.value})}
+                    />
+
+                    {/* Select Path */}
+                    <select
+                      className="border rounded-md p-2 bg-background"
+                      value={newMaterial.path_id}
+                      onChange={(e) => setNewMaterial({...newMaterial, path_id: e.target.value})}
+                    >
+                      <option value="">Selecione uma trilha</option>
+                      {paths.map(p => (
+                        <option key={p.id} value={p.id}>{p.title}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <DialogFooter>
+                    <Button onClick={handleAddMaterial}>Salvar</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </CardHeader>
+
+            <CardContent>
+              {materials.length === 0 ? (
+                <div className="text-center text-muted-foreground py-10">
+                  Nenhum material cadastrado
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {materials.map((m) => {
+                    const path = paths.find(p => p.id === m.path_id);
+
+                    return (
+                      <div
+                        key={m.id}
+                        className="p-4 rounded-xl border border-muted hover:border-emerald-500/40 transition bg-background"
+                      >
+                        <h3 className="font-semibold">{m.title}</h3>
+
+                        {m.description && (
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                            {m.description}
+                          </p>
+                        )}
+
+                        <div className="text-xs text-muted-foreground mt-2">
+                          {path?.title || "Sem trilha"}
+                        </div>
+
+                       <div className="mt-4 flex justify-between items-center">
+                                  <a
+                                    href={m.url}
+                                    target="_blank"
+                                    className="text-emerald-500 hover:underline text-sm"
+                                  >
+                                    Abrir
+                                  </a>
+
+                                  <div className="flex gap-2">
+                                    {/* ✏️ EDIT */}
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => {
+                                        setNewMaterial({
+                                          title: m.title,
+                                          description: m.description,
+                                          url: m.url,
+                                          path_id: m.path_id || ""
+                                        });
+                                        setEditingMaterialId(m.id);
+                                        setIsEditingMaterial(true);
+                                        setMaterialDialogOpen(true);
+                                      }}
+                                    >
+                                      <Pencil className="w-4 h-4" />
+                                    </Button>
+
+                                    {/* 🗑 DELETE */}
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={async () => {
+                                        const confirmDelete = window.confirm("Tem certeza que deseja excluir este material?");
+                                        if (!confirmDelete) return;
+
+                                        try {
+                                          await EducationService.deleteMaterial(m.id);
+                                          setMaterials(prev => prev.filter(x => x.id !== m.id));
+                                          toast.success("Material removido");
+                                        } catch {
+                                          toast.error("Erro ao deletar material");
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

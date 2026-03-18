@@ -1,5 +1,5 @@
 import { BASE_URL } from '@/config/api';
-import { Certification, Class, Course, LearningPath } from '@/types/education.types';
+import { Certification, Class, Course, LearningMaterial, LearningPath } from '@/types/education.types';
 import axios from 'axios';
 
 const API_URL = `${BASE_URL}/api/education`;
@@ -115,6 +115,40 @@ export const EducationService = {
   async getPathById(id: string): Promise<LearningPath> {
     const res = await axios.get(`${API_URL}/paths/${id}`);
     return res.data;
-  }
+  },
+  // === LEARNING MATERIALS ===
+async getAllMaterials(): Promise<LearningMaterial[]> {
+  const res = await axios.get(`${API_URL}/materials`);
+  return res.data;
+},
+
+async getMaterialById(id: string): Promise<LearningMaterial> {
+  const res = await axios.get(`${API_URL}/materials/${id}`);
+  return res.data;
+},
+
+async getMaterialsByPath(pathId: string): Promise<LearningMaterial[]> {
+  const res = await axios.get(`${API_URL}/materials/by-path/${pathId}`);
+  return res.data;
+},
+
+async createMaterial(data: Partial<LearningMaterial>): Promise<LearningMaterial> {
+  const payload = {
+    ...data,
+    learning_path_id: data.learning_path_id || null // ✅ force null
+  };
+
+  const res = await axios.post(`${API_URL}/materials`, payload);
+  return res.data;
+},
+
+async updateMaterial(id: string, data: Partial<LearningMaterial>): Promise<LearningMaterial> {
+  const res = await axios.put(`${API_URL}/materials/${id}`, data);
+  return res.data;
+},
+
+async deleteMaterial(id: string): Promise<void> {
+  await axios.delete(`${API_URL}/materials/${id}`);
+}
 
 };
