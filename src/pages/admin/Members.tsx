@@ -83,7 +83,7 @@ const [users, setUsers] = useState<profile[]>([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [selectedMember, setSelectedMember] = useState<profile | null>(null);
   const [pendingMembers, setPendingMembers] = useState<Member[]>([]);
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Member | null;
@@ -111,7 +111,7 @@ useEffect(() => {
   loadMembersAndUsers();
 }, []);
 const admins = users.filter(u => u.role !== "member");
-
+const mems = users.filter(u => u.role !== "admin");
  const loadPendingMembers = async () => {
     setLoading(true);
     try {
@@ -338,7 +338,7 @@ const handleDeleteMember = async () => {
 
 
   // Preparar para editar um membro
-  const handleEditDialogOpen = (member: Member) => {
+  const handleEditDialogOpen = (member: profile) => {
   setSelectedMember(member);
   setFormData({
     first_name: member.first_name,
@@ -348,14 +348,14 @@ const handleDeleteMember = async () => {
     cpf: member.cpf,
     phone: member.phone,
     role: "member",   // or use member.role if available
-    grade: member.grade,
+    grade: member.role,
   });
   setEditDialogOpen(true);
 };
 
 
   // Preparar para excluir um membro
-  const handleDeleteDialogOpen = (member: Member) => {
+  const handleDeleteDialogOpen = (member: profile) => {
     setSelectedMember(member);
     setDeleteDialogOpen(true);
   };
@@ -620,15 +620,13 @@ const handleDeleteUser = async (userId: string) => {
 
             <TableHead className="w-[30%]">Email</TableHead>
 
-            <TableHead className="w-[15%]">Telefone</TableHead>
-
             <TableHead 
               className="w-[15%] cursor-pointer text-center"
               onClick={() => requestSort('grade')}
             >
               <div className="flex items-center justify-center gap-1">
-                Graduação
-                {getSortIcon('grade')}
+                Função
+             
               </div>
             </TableHead>
 
@@ -638,7 +636,7 @@ const handleDeleteUser = async (userId: string) => {
         </TableHeader>
 
         <TableBody>
-          {members.length === 0 ? (
+          {mems.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} className="text-center py-6">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
@@ -648,7 +646,7 @@ const handleDeleteUser = async (userId: string) => {
               </TableCell>
             </TableRow>
           ) : (
-            members.map((member) => {
+            mems.map((member) => {
               const user = userById.get(member.id);
 
               return (
@@ -671,17 +669,13 @@ const handleDeleteUser = async (userId: string) => {
                     {user ? user.email : '—'}
                   </TableCell>
 
-                  {/* PHONE */}
-                  <TableCell className="whitespace-nowrap">
-                    {member.phone || "—"}
-                  </TableCell>
-
                   {/* GRADE */}
                   <TableCell className="text-center">
-                    <Badge className={gradeColors[member.grade]}>
-                      {gradeLabels[member.grade]}
-                    </Badge>
-                  </TableCell>
+                  <Badge variant="outline">
+                    {member.role}
+                  </Badge>
+                </TableCell>
+
 
                   {/* ACTIONS */}
                   <TableCell className="text-right">
@@ -691,7 +685,7 @@ const handleDeleteUser = async (userId: string) => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEditDialogOpen(member)}
-                        className="flex items-center gap-1 text-white/70 hover:text-white"
+                        className="flex items-center gap-1 text-black/70 hover:text-white"
                       >
                         <Edit className="h-4 w-4" />
                         Editar
@@ -794,7 +788,7 @@ const handleDeleteUser = async (userId: string) => {
                         handleEditAdminDialogOpen(admin);
                         setSelectedUserId(admin.id);
                       }}
-                      className="flex items-center gap-1 text-white/70 hover:text-white"
+                      className="flex items-center gap-1 text-black/70 hover:text-white"
                     >
                       <Edit className="h-4 w-4" />
                       Editar
@@ -953,30 +947,7 @@ const handleDeleteUser = async (userId: string) => {
         />
       </div>
 
-      {/* Grau (only for member) */}
-      {selectedMember && (
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label className="text-right">Grau</Label>
-          <Select
-            value={formData.grade}
-            onValueChange={(value) =>
-              setFormData((prev) => ({ ...prev, grade: value as MemberGrade }))
-            }
-          >
-            <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Selecione o grau" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Influenciadores / Celebridades">Influenciadores / Celebridades</SelectItem>
-              <SelectItem value="Relações públicas">Relações públicas</SelectItem>
-              <SelectItem value="Empresas">Empresas</SelectItem>
-              <SelectItem value="Funcionários e médicos">Funcionários e médicos</SelectItem>
-              <SelectItem value="Amigos e Familiares">Amigos e Familiares</SelectItem>
-              <SelectItem value="Permuta">Permuta</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+      
     </div>
 
     <DialogFooter>

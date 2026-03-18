@@ -9,45 +9,21 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { 
-  Check, 
   Clock, 
   File, 
   FileText, 
   Megaphone, 
-  Pencil, 
-  Plus, 
-  Trash2,
   Calendar,
   UserCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { generateId } from "@/utils/dataUtils";
 import { Announcement, AnnouncementType } from "@/types";
 import { useAnnouncementContext } from "@/contexts/AnnouncementContext";
 import { useData } from "@/contexts/DataContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnnouncementViewService } from "@/services/announcementviews.services";
-
-// Tipos de dados para comunicados e notícias
-
-
-// Dados simulados para exemplo
 
 const typeLabels: Record<AnnouncementType, { label: string, icon: React.ElementType, color: string }> = {
   news: { 
@@ -77,7 +53,6 @@ const {
 } = useAnnouncementContext();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { members } = useData();
   const [currentAnnouncement, setCurrentAnnouncement] = useState<Partial<Announcement>>({
     title: "",
     content: "",
@@ -110,35 +85,6 @@ useEffect(() => {
   markAllAsViewed();
 }, [user, announcements]);
 
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setCurrentAnnouncement({ ...currentAnnouncement, [name]: value });
-  };
-
-  const handleSwitchChange = (name: string, checked: boolean) => {
-    setCurrentAnnouncement({ ...currentAnnouncement, [name]: checked });
-  };
-
-const handleAddOrUpdateAnnouncement = async () => {
-  if (!currentAnnouncement.title || !currentAnnouncement.content) {
-    toast.error("Preencha todos os campos obrigatórios");
-    return;
-  }
-
-  if (isEditing && currentAnnouncement.id) {
-    await updateAnnouncement(currentAnnouncement.id, currentAnnouncement);
-    toast.success("Comunicado atualizado com sucesso!");
-  } else {
-    const { id, created_at, updated_at, ...data } = currentAnnouncement;
-    const success = await addAnnouncement(data as Omit<Announcement, "id" | "created_at" | "updated_at">);
-    if (!success) return;
-    toast.success("Comunicado criado com sucesso!");
-  }
-
-  resetForm();
-  setDialogOpen(false);
-};
 
 
   const handleEditAnnouncement = (announcement: Announcement) => {
@@ -173,18 +119,29 @@ const handleToggleHighlight = (id: string) => {
   toast.success(`Comunicado ${action} destaques com sucesso!`);
 };
 
-  const resetForm = () => {
-    setCurrentAnnouncement({
-      title: "",
-      content: "",
-      type: "news",
-      publish_date: new Date(),
-      expiry_date: undefined,
-      is_published: false,
-      is_highlighted: false
-    });
-    setIsEditing(false);
-  };
+function parseUTCDate(date: string | Date | undefined): Date | null {
+  if (!date) return null;
+
+  if (date instanceof Date) return date; // already a Date, return as is
+
+  // if string, replace space with T to parse correctly
+  return new Date(date.replace(" ", "T"));
+}
+
+function getActiveAnnouncements(announcements: Announcement[]) {
+  const now = new Date();
+
+  return announcements.filter(a => {
+    if (!a.is_published) return false;
+
+    const publishDate = parseUTCDate(a.publish_date);
+    const expiryDate = parseUTCDate(a.expiry_date);
+
+    if (!publishDate) return false;
+
+    return publishDate <= now && (!expiryDate || expiryDate > now);
+  });
+}
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
@@ -222,7 +179,7 @@ const handleToggleHighlight = (id: string) => {
           
           <TabsContent value="all" className="space-y-4">
             <RenderAnnouncements 
-              announcements={announcements} 
+              announcements={getActiveAnnouncements(announcements).filter(a =>  a.is_published)} 
               onEdit={handleEditAnnouncement}
               onDelete={handleDeleteAnnouncement}
               onTogglePublish={handleTogglePublish}
@@ -233,7 +190,7 @@ const handleToggleHighlight = (id: string) => {
           
           <TabsContent value="news" className="space-y-4">
             <RenderAnnouncements 
-              announcements={announcements.filter(a => a.type === 'news')} 
+              announcements={getActiveAnnouncements(announcements).filter(a => a.type === 'news' && a.is_published)} 
               onEdit={handleEditAnnouncement}
               onDelete={handleDeleteAnnouncement}
               onTogglePublish={handleTogglePublish}
@@ -244,7 +201,7 @@ const handleToggleHighlight = (id: string) => {
           
           <TabsContent value="notice" className="space-y-4">
             <RenderAnnouncements 
-              announcements={announcements.filter(a => a.type === 'notice')} 
+              announcements={getActiveAnnouncements(announcements).filter(a => a.type === 'notice' && a.is_published)} 
               onEdit={handleEditAnnouncement}
               onDelete={handleDeleteAnnouncement}
               onTogglePublish={handleTogglePublish}
@@ -255,7 +212,7 @@ const handleToggleHighlight = (id: string) => {
           
           <TabsContent value="announcement" className="space-y-4">
             <RenderAnnouncements 
-              announcements={announcements.filter(a => a.type === 'announcement')} 
+              announcements={getActiveAnnouncements(announcements).filter(a => a.type === 'announcement' && a.is_published)} 
               onEdit={handleEditAnnouncement}
               onDelete={handleDeleteAnnouncement}
               onTogglePublish={handleTogglePublish}
@@ -266,7 +223,7 @@ const handleToggleHighlight = (id: string) => {
           
           <TabsContent value="highlighted" className="space-y-4">
             <RenderAnnouncements 
-              announcements={announcements.filter(a => a.is_highlighted)} 
+              announcements={getActiveAnnouncements(announcements).filter(a => a.is_highlighted && a.is_published)} 
               onEdit={handleEditAnnouncement}
               onDelete={handleDeleteAnnouncement}
               onTogglePublish={handleTogglePublish}
@@ -291,10 +248,6 @@ interface RenderAnnouncementsProps {
 
 const RenderAnnouncements: React.FC<RenderAnnouncementsProps> = ({
   announcements,
-  onEdit,
-  onDelete,
-  onTogglePublish,
-  onToggleHighlight,
   formatDate,
 }) => {
   if (announcements.length === 0) {

@@ -161,6 +161,21 @@ function formatDateForInputLocal(date: Date): string {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+// Convert a UTC string from DB to "YYYY-MM-DDTHH:MM" for datetime-local input
+function utcToLocalInput(date: string | Date | undefined): string {
+  if (!date) return "";
+  const d = typeof date === "string" ? new Date(date) : date;
+  const offset = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - offset * 60 * 1000);
+  return local.toISOString().slice(0, 16); // string for input
+}
+
+function localInputToUtc(inputValue: string): string {
+  const d = new Date(inputValue);
+  const offset = d.getTimezoneOffset();
+  const utc = new Date(d.getTime() + offset * 60 * 1000);
+  return utc.toISOString();
+}
 
   const resetForm = () => {
     setCurrentAnnouncement({
@@ -283,44 +298,38 @@ function formatDateForInputLocal(date: Date): string {
                     <Label htmlFor="publish_date" className="text-right">
                       Data de Publicação
                     </Label>
-                    <Input
-                      id="publish_date"
-                      name="publish_date"
-                      type="datetime-local"
-                      className="col-span-3"
-                     value={currentAnnouncement.publish_date 
-  ? formatDateForInputLocal(new Date(currentAnnouncement.publish_date))
-  : ""}
-
-                      onChange={(e) => setCurrentAnnouncement({
-                        ...currentAnnouncement, 
-                        publish_date: new Date(e.target.value)
-                      })}
-                    />
+                   <Input
+                        id="publish_date"
+                        name="publish_date"
+                        type="datetime-local"
+                        className="col-span-3"
+                        value={utcToLocalInput(currentAnnouncement.publish_date)}
+                        onChange={(e) =>
+                          setCurrentAnnouncement({
+                            ...currentAnnouncement,
+                            publish_date: new Date(e.target.value),
+                          })
+                        }
+                      />
                   </div>
                   
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="expiry_date" className="text-right">
                       Data de Expiração
                     </Label>
-                    <Input
-                      id="expiry_date"
-                      name="expiry_date"
-                      type="datetime-local"
-                      className="col-span-3"
-                      value={currentAnnouncement.expiry_date 
-                        ? new Date(currentAnnouncement.expiry_date)
-                            .toISOString()
-                            .slice(0, 16) 
-                        : ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setCurrentAnnouncement({
-                          ...currentAnnouncement, 
-                          expiry_date: value ? new Date(value) : undefined
-                        });
-                      }}
-                    />
+                   <Input
+                id="expiry_date"
+                name="expiry_date"
+                type="datetime-local"
+                className="col-span-3"
+                value={utcToLocalInput(currentAnnouncement.expiry_date)}
+                onChange={(e) =>
+                  setCurrentAnnouncement({
+                    ...currentAnnouncement,
+                    expiry_date: e.target.value ? new Date(e.target.value) : undefined,
+                  })
+                }
+              />
                   </div>
                   
                   <div className="grid grid-cols-4 items-center gap-4">

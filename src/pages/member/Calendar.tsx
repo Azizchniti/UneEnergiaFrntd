@@ -60,7 +60,12 @@ const CalendarPage: React.FC = () => {
     }
   };
 
+  const formats = {
+  monthHeaderFormat: (date: Date, culture: string, localizer: any) =>
+    format(date, "LLLL yyyy", { locale: ptBR }), // full month name + year in pt-BR
+};
  return (
+  
   <div className="max-w-7xl mx-auto px-6 py-10 space-y-6">
 
     {/* HEADER */}
@@ -104,45 +109,61 @@ const CalendarPage: React.FC = () => {
           Carregando eventos...
         </div>
       ) : (
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          view={view}
-          onView={(newView) => setView(newView)}
-          date={currentDate}
-          onNavigate={(date) => setCurrentDate(date)}
-          style={{ height: 650 }}
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        view={view}
+        onView={(newView) => setView(newView)}
+        date={currentDate}
+        onNavigate={(date) => setCurrentDate(date)}
+        style={{ height: 650 }}
+        messages={{
+          today: "Hoje",
+          previous: "Anterior",
+          next: "Próximo",
+          month: "Mês",
+          week: "Semana",
+          day: "Dia",
+          agenda: "Agenda",
+          date: "Data",
+          time: "Hora",
+          event: "Evento",
+          noEventsInRange: "Nenhum evento neste período",
+        }}
+        formats={formats} // from previous step
+        eventPropGetter={() => ({
+          style: {
+            backgroundColor: "#10b981",
+            borderRadius: "10px",
+            border: "none",
+            color: "#022c22",
+            padding: "4px 8px",
+            fontSize: "12px",
+            fontWeight: 500,
+          },
+        })}
+        dayPropGetter={(date) => {
+          const today = new Date();
+          const isToday =
+            date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth() &&
+            date.getDate() === today.getDate();
 
-          messages={{
-            today: "Hoje",
-            previous: "Anterior",
-            next: "Próximo",
-            month: "Mês",
-            week: "Semana",
-            day: "Dia",
-            agenda: "Agenda",
-            date: "Data",
-            time: "Hora",
-            event: "Evento",
-            noEventsInRange: "Nenhum evento neste período",
-          }}
+          if (isToday) {
+            return {
+              style: {
+                backgroundColor: "#a3a8a8", // your custom color for today
+                borderRadius: "8px",
+              },
+            };
+          }
 
-          eventPropGetter={() => ({
-            style: {
-              backgroundColor: "#10b981",
-              borderRadius: "10px",
-              border: "none",
-              color: "#022c22",
-              padding: "4px 8px",
-              fontSize: "12px",
-              fontWeight: 500,
-            },
-          })}
-
-          className="text-white rounded-xl overflow-hidden"
-        />
+          return {}; // default style
+        }}
+        className="text-white rounded-xl overflow-hidden"
+      />
       )}
     </div>
   </div>

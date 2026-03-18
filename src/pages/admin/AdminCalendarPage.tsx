@@ -116,6 +116,11 @@ const AdminCalendarPage: React.FC = () => {
     setShowModal(false);
     fetchEvents();
   };
+
+    const formats = {
+    monthHeaderFormat: (date: Date, culture: string, localizer: any) =>
+      format(date, "LLLL yyyy", { locale: ptBR }), // full month name + year in pt-BR
+  };
 return (
   <div className="max-w-7xl mx-auto px-6 py-10 space-y-6">
 
@@ -169,47 +174,71 @@ return (
           Carregando eventos...
         </div>
       ) : (
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          view={view}
-          onView={setView}
-          date={currentDate}
-          onNavigate={setCurrentDate}
-          onSelectEvent={handleSelectEvent}
-          style={{ height: 650 }}
+       <Calendar
+  localizer={localizer}
+  events={events}
+  startAccessor="start"
+  endAccessor="end"
+  view={view}
+  onView={(newView) => setView(newView)}
+  date={currentDate}
+  onNavigate={(date) => setCurrentDate(date)}
+  style={{ height: 650 }}
+  
+  // --- Add this to handle clicks on events ---
+  onSelectEvent={handleSelectEvent}
 
-          messages={{
-            today: "Hoje",
-            previous: "Anterior",
-            next: "Próximo",
-            month: "Mês",
-            week: "Semana",
-            day: "Dia",
-            agenda: "Agenda",
-            date: "Data",
-            time: "Hora",
-            event: "Evento",
-            noEventsInRange: "Nenhum evento neste período",
-          }}
+  messages={{
+    today: "Hoje",
+    previous: "Anterior",
+    next: "Próximo",
+    month: "Mês",
+    week: "Semana",
+    day: "Dia",
+    agenda: "Agenda",
+    date: "Data",
+    time: "Hora",
+    event: "Evento",
+    noEventsInRange: "Nenhum evento neste período",
+  }}
 
-          eventPropGetter={() => ({
-            style: {
-              backgroundColor: "#10b981",
-              borderRadius: "10px",
-              border: "none",
-              color: "#022c22",
-              padding: "4px 8px",
-              fontSize: "12px",
-              fontWeight: 500,
-              cursor: "pointer",
-            },
-          })}
+  formats={formats}
+  
+  // event styling
+  eventPropGetter={() => ({
+    style: {
+      backgroundColor: "#10b981",
+      borderRadius: "10px",
+      border: "none",
+      color: "#022c22",
+      padding: "4px 8px",
+      fontSize: "12px",
+      fontWeight: 500,
+    },
+  })}
 
-          className="text-white rounded-xl overflow-hidden"
-        />
+  // highlight today
+  dayPropGetter={(date) => {
+    const today = new Date();
+    const isToday =
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate();
+
+    if (isToday) {
+      return {
+        style: {
+          backgroundColor: "#a3a8a8",
+          borderRadius: "8px",
+          zIndex: 0, // <- make sure events are above this background
+        },
+      };
+    }
+    return {};
+  }}
+  
+  className="text-white rounded-xl overflow-hidden"
+/>
       )}
     </div>
 
@@ -250,7 +279,7 @@ return (
               className="w-full px-3 py-2 rounded-lg 
               bg-black/30 border border-white/10 
               text-white placeholder-white/40 
-              focus:outline-none focus:border-emerald-500"
+              focus:outline-none focus:border-emerald-500 resize-none"
             />
 
             <div className="grid grid-cols-2 gap-3">
@@ -260,8 +289,8 @@ return (
                 onChange={(e) =>
                   setForm({ ...form, start_time: e.target.value })
                 }
-                className="w-full px-3 py-2 rounded-lg 
-                bg-black/30 border border-white/10 text-white"
+               className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-white"
+               style={{ WebkitAppearance: "none", colorScheme: "dark" }}
               />
 
               <input
@@ -270,8 +299,8 @@ return (
                 onChange={(e) =>
                   setForm({ ...form, end_time: e.target.value })
                 }
-                className="w-full px-3 py-2 rounded-lg 
-                bg-black/30 border border-white/10 text-white"
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-white"
+               style={{ WebkitAppearance: "none", colorScheme: "dark" }}
               />
             </div>
           </div>
