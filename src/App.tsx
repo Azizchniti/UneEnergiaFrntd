@@ -16,25 +16,18 @@ import NotFound from "./pages/NotFound";
 // Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminMembers from "./pages/admin/Members";
-import AdminLeads from "./pages/admin/Leads";
-import AdminLeadsKanban from "./pages/admin/LeadsKanban";
-import AdminSquads from "./pages/admin/Squads";
-import AdminCommissions from "./pages/admin/Commissions";
 import AdminGraduation from "./pages/admin/Graduation";
 import AdminMural from "./pages/admin/Mural";
+import AdminCalendar from "./pages/admin/AdminCalendarPage";
 
 
 
 // Member pages
-import MemberDashboard from "./pages/member/Dashboard";
 import MemberMembers from "./pages/member/Members";
-import MemberCommissions from "./pages/member/Commissions";
-import MemberLeads from "./pages/member/Leads";
-import NewLead from "./pages/member/NewLead";
 import MemberMural from "./pages/member/Mural";
-import RankingPage from "./pages/member/Ranking";
 import ProfilePage from "./pages/member/Profile";
 import MemberGraduation from "./pages/member/Graduation";
+import MemberCalendar from "./pages/member/Calendar";
 
 import Signup from "./pages/Signup";
 import { AnnouncementProvider } from "./contexts/AnnouncementContext";
@@ -79,41 +72,6 @@ const App = () => (
               />
 
               <Route 
-                path="/admin/leads"
-                element={
-                  <AuthenticatedLayout requiredRole="admin">
-                    <AdminLeads />
-                  </AuthenticatedLayout>
-                } 
-              />
-              <Route 
-                path="/admin/leadsKanban"
-                element={
-                  <AuthenticatedLayout requiredRole="admin">
-                    <AdminLeadsKanban />
-                  </AuthenticatedLayout>
-                } 
-              />
-
-              <Route 
-                path="/admin/squads" 
-                element={
-                  <AuthenticatedLayout requiredRole="admin">
-                    <AdminSquads />
-                  </AuthenticatedLayout>
-                } 
-              />
-
-              <Route 
-                path="/admin/commissions" 
-                element={
-                  <AuthenticatedLayout requiredRole="admin">
-                    <AdminCommissions />
-                  </AuthenticatedLayout>
-                } 
-              />
-
-              <Route 
                 path="/admin/graduation" 
                 element={
                   <AuthenticatedLayout requiredRole="admin">
@@ -141,40 +99,22 @@ const App = () => (
                   </AuthenticatedLayout>
                 } 
               />
-              
-              {/* Member routes */}
-              <Route 
-                path="/member" 
+                 <Route 
+                path="/admin/calendar" 
                 element={
-                  <AuthenticatedLayout requiredRole="member" >
-                    <MemberDashboard />
+                  <AuthenticatedLayout requiredRole="admin" >
+                    <AdminCalendar />
                   </AuthenticatedLayout>
                 } 
               />
+              
+              {/* Member routes */}
 
               <Route 
                 path="/member/profile" 
                 element={
                   <AuthenticatedLayout requiredRole="member" >
                     <ProfilePage/>
-                  </AuthenticatedLayout>
-                } 
-              />
-
-              <Route 
-                path="/member/leads" 
-                element={
-                  <AuthenticatedLayout requiredRole="member">
-                    <MemberLeads />
-                  </AuthenticatedLayout>
-                } 
-              />
-
-              <Route 
-                path="/member/leads/new" 
-                element={
-                  <AuthenticatedLayout requiredRole="member">
-                    <NewLead />
                   </AuthenticatedLayout>
                 } 
               />
@@ -198,23 +138,6 @@ const App = () => (
               />
 
               <Route 
-                path="/member/commissions" 
-                element={
-                  <AuthenticatedLayout requiredRole="member">
-                    <MemberCommissions/>
-                  </AuthenticatedLayout>
-                } 
-              />
-
-              <Route 
-                path="/member/ranking" 
-                element={
-                  <AuthenticatedLayout requiredRole="member">
-                    <RankingPage/>
-                  </AuthenticatedLayout>
-                } 
-              />
-              <Route 
                 path="/member/mural" 
                 element={
                   <AuthenticatedLayout requiredRole="member">
@@ -231,6 +154,15 @@ const App = () => (
                   <AuthenticatedLayout requiredRole="member">
                 
                     <MemberGraduation/>
+                  </AuthenticatedLayout>
+                } 
+              />
+               <Route 
+                path="/member/calendar" 
+                element={
+                  <AuthenticatedLayout requiredRole="member">
+                
+                    <MemberCalendar/>
                   </AuthenticatedLayout>
                 } 
               />

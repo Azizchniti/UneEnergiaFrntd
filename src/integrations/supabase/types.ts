@@ -476,7 +476,7 @@ export type Database = {
         | "negotiating"
         | "closed"
         | "lost"
-      member_grade: "beginner" | "silver" | "gold" | "platinum" | "diamond"
+      member_grade: "	Influenciadores / Celebridades" | "Relações públicas" | "Empresas" | "Funcionários e médicos" | "Amigos e Familiares" | "Permuta"
       member_status: "pending" | "approved" | "rejected"
       user_role: "admin" | "member"
     }
@@ -616,7 +616,7 @@ export const Constants = {
         "closed",
         "lost",
       ],
-      member_grade: ["beginner", "silver", "gold", "platinum", "diamond"],
+      member_grade: ["Influenciadores / Celebridades", "Relações públicas", "Empresas", "Funcionários e médicos", "Amigos e Familiares", "Permuta"],
       member_status: ["pending", "approved", "rejected"],
       user_role: ["admin", "member"],
     },

@@ -1,45 +1,61 @@
 // src/services/announcement.service.ts
 
 import axios from 'axios';
-import { Announcement } from '../types/index';
+import { Announcement } from '../types';
+import { BASE_URL } from '@/config/api';
 
-// Backend base URL (adjust if needed)
-const API_URL = 'https://clinicahumanbcknd.onrender.com/api/announcements';
-//const API_URL = 'https://localhost:3000/api/announcements';
+// Only endpoint path here
+const ENDPOINT = '/api/announcements';
 
 export const AnnouncementService = {
   // ✅ Get all announcements
   async getAllAnnouncements(): Promise<Announcement[]> {
-    const response = await axios.get(`${API_URL}`);
+    const response = await axios.get(`${BASE_URL}${ENDPOINT}`);
     return response.data;
   },
 
   // ✅ Get a single announcement by ID
   async getAnnouncementById(id: string): Promise<Announcement> {
-    const response = await axios.get(`${API_URL}/${id}`);
+    const response = await axios.get(`${BASE_URL}${ENDPOINT}/${id}`);
     return response.data;
   },
 
   // ✅ Create a new announcement
-  async createAnnouncement(announcementData: Partial<Announcement>): Promise<Announcement> {
+  async createAnnouncement(
+    announcementData: Partial<Announcement>
+  ): Promise<Announcement> {
     try {
-      const response = await axios.post(`${API_URL}`, announcementData);
+      const response = await axios.post(
+        `${BASE_URL}${ENDPOINT}`,
+        announcementData
+      );
       return response.data;
     } catch (err: any) {
-      console.error('Failed to create announcement:', err.response?.data || err);
+      console.error(
+        'Failed to create announcement:',
+        err.response?.data || err
+      );
       throw err;
     }
   },
 
   // ✅ Update an announcement by ID
-  async updateAnnouncement(id: string, announcementData: Partial<Announcement>): Promise<Announcement> {
-    const response = await axios.put(`${API_URL}/${id}`, announcementData);
+  async updateAnnouncement(
+    id: string,
+    announcementData: Partial<Announcement>
+  ): Promise<Announcement> {
+    const response = await axios.put(
+      `${BASE_URL}${ENDPOINT}/${id}`,
+      announcementData
+    );
     return response.data;
   },
 
   // ✅ Delete an announcement by ID
   async deleteAnnouncement(id: string): Promise<{ message?: string }> {
-    const response = await axios.delete(`${API_URL}/${id}`);
+    const response = await axios.delete(
+      `${BASE_URL}${ENDPOINT}/${id}`
+    );
     return response.data;
   },
 };

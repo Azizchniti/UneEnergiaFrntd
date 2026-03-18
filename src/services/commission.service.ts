@@ -2,8 +2,9 @@
 
 import axios from "axios";
 import { Commission, MonthlyCommission } from "@/types";
+import { BASE_URL } from "@/config/api";
 
-const API_URL = "https://clinicahumanbcknd.onrender.com/api/commissions"; // Adjust if needed
+const API_URL = `${BASE_URL}/api/commissions`; // Adjust if needed
 //const API_URL = 'http://localhost:3000/api/commissions';
 let commissions: Commission[] = [];
 

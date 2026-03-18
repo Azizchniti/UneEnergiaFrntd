@@ -22,7 +22,8 @@ import {
   GraduationCap,
   Megaphone,
   ChevronLeft,
-  LucideIcon
+  LucideIcon,
+  Calendar
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -108,29 +109,9 @@ useEffect(() => {
 
   const adminLinks = [
     {
-      title: "Dashboard",
-      href: "/admin",
-      icon: BarChart3,
-    },
-    {
       title: "Parceiros",
       href: "/admin/members",
       icon: Users,
-    },
-    {
-      title: "Leads",
-      href: "/admin/leads",
-      icon: Phone,
-    },
-    {
-      title: "Squads",
-      href: "/admin/squads",
-      icon: Crown,
-    },
-    {
-      title: "Comissões",
-      href: "/admin/commissions",
-      icon: DollarSign,
     },
     {
       title: "Treinamentos",
@@ -142,57 +123,23 @@ useEffect(() => {
       href: "/admin/mural",
       icon: Megaphone,
       key: "admin-mural",
-     
-      
     },
-    // {
-    //   title: "Relatórios",
-    //   href: "/admin/reports",
-    //   icon: LineChart,
-    // },
+    {
+      title: "Calendário",
+      href: "/admin/calendar",
+      icon: Calendar,
+    }
+
+
   ];
 
   const memberLinks = [
-    {
-      title: "Dashboard",
-      href: "/member",
-      icon: BarChart3,
-    },
     {
       title: "Meu Perfil",
       href: "/member/profile",
       icon: UserCircle,
     },
-    {
-      title: "Meus Leads",
-      href: "/member/leads",
-      icon: Phone,
-    },
-    // {
-    //   title: "Adicionar Lead",
-    //   href: "/member/leads/new",
-    //   icon: PlusCircle,
-    // },
-    {
-      title: "Meu Squad",
-      href: "/member/squad",
-      icon: Users,
-    },
-    // {
-    //   title: "Adicionar Membro",
-    //   href: "/member/member/new",
-    //   icon: PlusCircle,
-    // },
-    {
-      title: "Comissões",
-      href: "/member/commissions",
-      icon: DollarSign,
-    },
-    {
-      title: "Ranking",
-      href: "/member/ranking",
-      icon: Trophy,
-    },
+   
     {
       title: "Mural",
       href: "/member/mural",
@@ -205,60 +152,76 @@ useEffect(() => {
       href: "/member/grade",
       icon: GraduationCap,
      },
+    {
+      title: "Calendário",
+      href: "/member/calendar",
+      icon: Calendar,
+    },
   ];
 
   const links = isAdmin ? adminLinks : memberLinks;
 
-  return (
-    <div
-      className={cn(
-        "fixed inset-y-0 left-0 z-20 flex flex-col w-64 md:w-72 neo border-r border-r-border/30 transform transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-        isCollapsed ? "md:w-20" : "md:w-72"
-      )}
-    >
-      <div className="flex items-center justify-between h-16 p-4 border-b border-border/30">
-        <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={toggleCollapse} 
-                className="mr-2"
-              >
-                {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-              </Button>
+return (
+  <div
+    className={cn(
+      "fixed inset-y-0 left-0 z-20 flex flex-col transform transition-all duration-300 ease-in-out",
+      "backdrop-blur-xl bg-gradient-to-b from-[#0b1f1a] via-[#0f2e27] to-[#071412]",
+      "border-r border-white/10 shadow-[0_0_40px_rgba(16,185,129,0.08)]",
+      isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+      isCollapsed ? "w-20" : "w-64 md:w-72"
+    )}
+  >
+    {/* HEADER */}
+    <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleCollapse}
+          className="mr-2 text-white/60 hover:text-white hover:bg-white/10 transition-all"
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-5 h-5" />
+          ) : (
+            <ChevronLeft className="w-5 h-5" />
+          )}
+        </Button>
 
-            {!isCollapsed && (
-          <Link to="/" className="flex items-center gap-2 px-4">
+        {!isCollapsed && (
+          <Link to="/" className="flex items-center gap-2 px-2">
             <img
-              src="/Logo2-br.PNG"
-              alt="Foco Hub Icon"
-              className="w-40 h-auto object-contain ml-4"
+              src="/Logo2-bg.png"
+              alt="Une Energia"
+              className="w-36 h-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300"
             />
           </Link>
         )}
-
-          
-          {isCollapsed && (
-            <div className="flex justify-center w-full">
-             
-            </div>
-          )}
-        </div>
-        
-        <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">
-          <X className="w-5 h-5" />
-        </Button>
       </div>
-      <ScrollArea className="flex-1 px-3 py-4">
-        <nav className="flex flex-col gap-2">
+
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onClose}
+        className="md:hidden text-white/60 hover:text-white"
+      >
+        <X className="w-5 h-5" />
+      </Button>
+    </div>
+
+    {/* NAVIGATION */}
+    <ScrollArea className="flex-1 px-3 py-4">
+      <nav className="flex flex-col gap-2">
         {links.map((link) => (
           <Link
             key={link.href}
             to={link.href}
             className={cn(
-              "flex items-center justify-between px-3 py-2.5 rounded-lg group transition-all hover:bg-accent hover:text-accent-foreground",
-              location.pathname === link.href && "bg-accent text-accent-foreground font-medium"
+              "relative flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group",
+              "text-white/70 hover:text-white hover:bg-white/5 hover:translate-x-1",
+              "before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:bg-emerald-400 before:rounded-r-full before:transition-all before:duration-300",
+              location.pathname === link.href
+                ? "bg-white/10 text-white before:h-6 shadow-[0_0_12px_rgba(16,185,129,0.25)]"
+                : "before:h-0"
             )}
           >
             <div
@@ -267,69 +230,62 @@ useEffect(() => {
                 isCollapsed && "justify-center w-full"
               )}
             >
-              <link.icon className="w-5 h-5" />
+              <link.icon className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300" />
+
               {!isCollapsed && <span>{link.title}</span>}
 
-              {/* ✅ Show badge ONLY on Mural link */}
-               {!isAdmin && link.title === "Mural" && unseenCount > 0 && (
-                <span className="absolute -top-1 left-5 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
+              {/* Notification badge */}
+              {!isAdmin && link.title === "Mural" && unseenCount > 0 && (
+                <span className="absolute -top-1 left-5 bg-gradient-to-r from-emerald-400 to-green-500 text-black text-xs rounded-full px-2 py-0.5 font-semibold shadow-md">
                   {unseenCount}
                 </span>
               )}
-
             </div>
 
             {!isCollapsed && (
-              <ChevronRight className="w-4 h-4 opacity-0 transition-opacity group-hover:opacity-70" />
+              <ChevronRight className="w-4 h-4 opacity-0 transition-all group-hover:opacity-70 group-hover:translate-x-1 text-white/60" />
             )}
           </Link>
         ))}
+      </nav>
 
-        </nav>
-
-        {!isCollapsed && isAdmin && (
-          <div className="mt-6">
-            {/* <Separator className="my-2" /> */}
-            <div className="px-3 py-2">
-              {/* <p className="text-sm font-medium text-muted-foreground">Relatórios rápidos</p> */}
-              <div className="mt-3 space-y-2">
-                {/* <Button variant="outline" size="sm" className="w-full justify-start">
-                  <LineChart className="w-4 h-4 mr-2" />
-                  Comissões mensais
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
-                  <Trophy className="w-4 h-4 mr-2" />
-                  Top 10 membros
-                </Button> */}
-              </div>
-            </div>
-          </div>
-        )}
-      </ScrollArea>
-      
-      {!isCollapsed && (
-        <div className="p-4 border-t border-border/30">
-          <div className="flex items-center gap-3 py-2">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold">
-              {user?.first_name?.charAt(0).toUpperCase() || "U"}
-            </div>
-            <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-medium truncate">{user?.first_name+" "+user?.last_name}</span>
-              <span className="text-xs text-muted-foreground truncate">{user?.email}</span>
-            </div>
+      {/* ADMIN SECTION */}
+      {!isCollapsed && isAdmin && (
+        <div className="mt-6">
+          <div className="px-3 py-2">
+            <div className="mt-3 space-y-2"></div>
           </div>
         </div>
       )}
-      
-      {isCollapsed && (
-        <div className="p-4 border-t border-border/30 flex justify-center">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold">
+    </ScrollArea>
+
+    {/* USER SECTION */}
+    {!isCollapsed ? (
+      <div className="p-4 border-t border-white/10 bg-white/5 backdrop-blur-md">
+        <div className="flex items-center gap-3 py-2">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 text-black font-bold shadow-lg">
             {user?.first_name?.charAt(0).toUpperCase() || "U"}
           </div>
+
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-sm font-medium text-white truncate">
+              {user?.first_name + " " + user?.last_name}
+            </span>
+            <span className="text-xs text-white/50 truncate">
+              {user?.email}
+            </span>
+          </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    ) : (
+      <div className="p-4 border-t border-white/10 flex justify-center">
+        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 text-black font-bold shadow-lg">
+          {user?.first_name?.charAt(0).toUpperCase() || "U"}
+        </div>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default Sidebar;

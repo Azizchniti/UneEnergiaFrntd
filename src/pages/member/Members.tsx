@@ -24,19 +24,19 @@ import { MemberService } from "@/services/members.service";
 
 // Define grade colors mapping
 const gradeColors = {
-  beginner: "bg-slate-500",
-  standard: "bg-blue-500",
-  gold: "bg-yellow-500",
-  platinum: "bg-violet-500",
-  diamond: "bg-emerald-500"
+  "Influenciadores / Celebridades": "bg-slate-500",
+  "Relações públicas": "bg-blue-500",
+  "Empresas": "bg-yellow-500",
+  "Funcionários e médicos": "bg-violet-500",
+  "Amigos e Familiares": "bg-emerald-500"
 };
 
 const gradeLabels = {
-  beginner: "Beginner",
-  standard: "Standard",
-  gold: "Gold",
-  platinum: "Platinum",
-  diamond: "Diamond"
+  "Influenciadores / Celebridades": "Influenciadores / Celebridades",
+  "Relações públicas": "Relações públicas",
+  "Empresas": "Empresas",
+  "Funcionários e médicos": "Funcionários e médicos",
+  "Amigos e Familiares": "Amigos e Familiares"
 };
 
 const MemberMembersPage = () => {

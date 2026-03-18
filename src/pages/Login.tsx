@@ -22,9 +22,9 @@ const Login: React.FC = () => {
   function redirectUserByRole(role: string) {
     switch (role) {
       case "admin":
-        return "/admin";
+        return "/admin/members";
       case "member":
-        return "/member";
+        return "/member/profile";
       default:
         return "/";
     }
@@ -176,6 +176,16 @@ const Login: React.FC = () => {
               </div>
 
             </form>
+           {/* <div className="text-sm text-center mt-4">
+            <span className="text-muted-foreground">Não tem uma conta? </span>
+            <button
+              type="button"
+              onClick={() => navigate("/signup")}
+              className="text-primary hover:underline"
+            >
+              Crie uma
+            </button>
+          </div>  */}
 
           </CardContent>
 

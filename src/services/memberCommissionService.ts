@@ -13,14 +13,14 @@ export default class MemberCommissionService {
   getMemberMonthlyCommissions(memberId: string): MonthlyCommission[] {
     // Filter commissions for the member
     const memberCommissions = this.commissions.filter(
-      (commission) => commission.memberId === memberId
+      (commission) => commission.member_id === memberId
     );
 
     // Group commissions by month and year
     const monthlyCommissionsMap = new Map<string, MonthlyCommission>();
 
     memberCommissions.forEach((commission) => {
-      const date = new Date(commission.saleDate);
+      const date = new Date(commission.sale_date);
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
       const key = `${year}-${month}`;
@@ -34,18 +34,18 @@ export default class MemberCommissionService {
         monthlyCommissionsMap.set(key, {
           month: monthNames[month - 1],
           year: year,
-          totalCommission: 0,
+          total_commission: 0,
           isPaid: true, // Will be updated
           details: [],
         });
       }
 
       const monthlyCommission = monthlyCommissionsMap.get(key)!;
-      monthlyCommission.totalCommission += commission.commissionValue;
+      monthlyCommission.total_commission += commission.commission_value;
       monthlyCommission.details.push(commission);
       
       // If any commission in this month is not paid, the whole month is considered unpaid
-      if (!commission.isPaid) {
+      if (!commission.is_paid) {
         monthlyCommission.isPaid = false;
       }
     });

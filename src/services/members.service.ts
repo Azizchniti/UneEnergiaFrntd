@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { Member } from '../types/member.types'; // Assuming this defines your Member interface
 import { Squad } from '@/types';
+import { BASE_URL } from '@/config/api';
 
 // Backend API base URL (adjust if needed)
-const API_URL = 'https://clinicahumanbcknd.onrender.com/api/members';
-const UPLOAD_URL = 'https://clinicahumanbcknd.onrender.com/api/upload';
+const API_URL = `${BASE_URL}/api/members`;
+const UPLOAD_URL = `${BASE_URL}/api/upload`;
 
 type TopSquad = {
   leader: Member;

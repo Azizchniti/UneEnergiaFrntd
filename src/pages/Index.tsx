@@ -10,7 +10,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     if (!isLoading && user) {
       if (user.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/");
       } else if (user.role === "member") {
         navigate("/member");
       }

@@ -113,56 +113,7 @@ const MemberGraduation: React.FC = () => {
   const [input, setInput] = useState("");
   
   // Map of lesson title → chunk filename
-const lessonFileMap: Record<string, string> = {
-  "01 - TÉCNICAS DE ABORDAGEM SUTIL E CONECTIVA": "course1_lesson1_chunks.json",
-  "02 – ICP (Perfil do Cliente Ideal)": "course1_lesson2_chunks.json",
-  "03 – ORGANIZAÇÃO DE AGENDA": "course1_lesson3_chunks.json",
-  "04 – EXPLICAÇÃO DOS SERVIÇOS DA FOCO": "course1_lesson4_chunks.json",
-  "05 – FOLLOW-UP": "course1_lesson5_chunks.json",
-};
 
-  const handleSend = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!input.trim()) return;
-
-  const currentTitle = selectedCourseClasses[currentClassIndex]?.title || "";
-  const chunkFile = lessonFileMap[currentTitle];
-
-  if (!chunkFile) {
-    setMessages((prev) => [
-      ...prev,
-      { role: "bot", text: "Não foi encontrado um conjunto de dados para esta aula." },
-    ]);
-    return;
-  }
-
-  const userMessage = { role: "user", text: input };
-  setMessages((prev) => [...prev, userMessage]);
-
-  try {
-    const res = await fetch("https://ThazCaniti-chatbot2.hf.space/ask", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        question: input,
-        file: chunkFile, // Send to backend so it loads the right JSON
-      }),
-    });
-
-    const data = await res.json();
-    setMessages((prev) => [
-      ...prev,
-      { role: "bot", text: data.answer || "Não entendi sua pergunta." },
-    ]);
-  } catch (err) {
-    setMessages((prev) => [
-      ...prev,
-      { role: "bot", text: "Erro ao buscar resposta." },
-    ]);
-  }
-
-  setInput("");
-};
 
   // Helper para obter nomes de cursos para exibição em trilhas e certificações
   const getCourseTitle = (courseId: string) => {
@@ -393,49 +344,7 @@ const handleViewCourse = async (course: Course) => {
           </p>
 
 
-          <div className="mt-6 p-4 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200">
-            <h4 className="text-lg font-semibold mb-4 flex items-center">
-              💬 Chatbot - Tire suas dúvidas sobre {selectedCourseClasses[currentClassIndex]?.title}
-            </h4>
-
-            <div className="flex flex-col space-y-4">
-              {/* Chat history */}
-              <div className="h-60 overflow-y-auto space-y-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-300">
-                {messages.map((msg, i) => (
-                  <div
-                    key={i}
-                    className={`p-3 max-w-[80%] rounded-lg ${
-                      msg.role === "user"
-                        ? "bg-blue-500 text-white self-end"
-                        : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white self-start"
-                    }`}
-                  >
-                    {msg.text}
-                  </div>
-                ))}
-              </div>
-
-              {/* Input */}
-              <form
-                onSubmit={handleSend}
-                className="flex space-x-2"
-              >
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Digite sua pergunta..."
-                  className="flex-1 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                >
-                  Enviar
-                </button>
-              </form>
-            </div>
-          </div>
+         
 
         </div>
 

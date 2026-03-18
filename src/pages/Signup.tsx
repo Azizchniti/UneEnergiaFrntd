@@ -60,7 +60,7 @@ const Signup: React.FC = () => {
         <div className="flex flex-col items-center mb-8 text-center">
           <div className="mb-4">
             <img
-              src="/V2_-_AZUL.webp"
+              src="/Logo2-bg2.png"
               alt="Foco Hub Logo"
               className="w-40 h-auto mx-auto"
             />

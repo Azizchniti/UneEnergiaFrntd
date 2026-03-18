@@ -119,7 +119,7 @@ useEffect(() => {
 
       formData.append("image", newCourse.imageFile);
 
-      const response = await fetch(`https://pfp-backend-0670.onrender.com/api/upload/course-image/${courseId}`, {
+      const response = await fetch(`https://uneenergiabcknd.onrender.com/api/upload/course-image/${courseId}`, {
         method: "POST",
         body: formData,
       });

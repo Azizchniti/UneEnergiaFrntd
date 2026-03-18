@@ -2,9 +2,10 @@
 
 import axios from 'axios';
 import { Lead } from '../types/index';
+import { BASE_URL } from '@/config/api';
 
 // Backend base URL (adjust if needed)
-const API_URL = 'https://clinicahumanbcknd.onrender.com/api/leads';
+const API_URL = `${BASE_URL}/api/leads`;
 //const API_URL = 'http://localhost:3000/api/leads';
 
 

@@ -56,19 +56,21 @@ import { signUp } from "@/services/auth-service";
 import { UserService } from "@/services/user.service";
 
 const gradeColors = {
-  beginner: "bg-slate-500",
-  silver: "bg-blue-500",
-  gold: "bg-yellow-500",
-  platinum: "bg-violet-500",
-  diamond: "bg-emerald-500"
+  "Influenciadores / Celebridades": "bg-slate-500",
+  "Relações públicas": "bg-blue-500",
+  "Empresas": "bg-yellow-500",
+  "Funcionários e médicos": "bg-violet-500",
+  "Amigos e Familiares": "bg-emerald-500",
+  "Permuta": "bg-red-500"
 };
 
 const gradeLabels = {
-  beginner: "Beginner",
-  silver: "Silver",
-  gold: "Gold",
-  platinum: "Platinum",
-  diamond: "Diamond"
+  "Influenciadores / Celebridades": "Influenciadores / Celebridades",
+  "Relações públicas": "Relações públicas",
+  "Empresas": "Empresas",
+  "Funcionários e médicos": "Funcionários e médicos",
+  "Amigos e Familiares": "Amigos e Familiares",
+  "Permuta": "Permuta"
 };
 
 const MembersPage = () => {
@@ -907,11 +909,12 @@ const handleDeleteUser = async (userId: string) => {
               <SelectValue placeholder="Selecione o grau" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="beginner">Start</SelectItem>
-              <SelectItem value="standard">Standard</SelectItem>
-              <SelectItem value="gold">Gold</SelectItem>
-              <SelectItem value="platinum">Platinum</SelectItem>
-              <SelectItem value="diamond">Diamond</SelectItem>
+              <SelectItem value="Influenciadores / Celebridades">Influenciadores / Celebridades</SelectItem>
+              <SelectItem value="Relações públicas">Relações públicas</SelectItem>
+              <SelectItem value="Empresas">Empresas</SelectItem>
+              <SelectItem value="Funcionários e médicos">Funcionários e médicos</SelectItem>
+              <SelectItem value="Amigos e Familiares">Amigos e Familiares</SelectItem>
+              <SelectItem value="Permuta">Permuta</SelectItem>
             </SelectContent>
           </Select>
         </div>

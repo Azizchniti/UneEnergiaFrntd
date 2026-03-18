@@ -1,8 +1,9 @@
+import { BASE_URL } from '@/config/api';
 import { profile } from '@/types';
 import axios from 'axios';
 
 //const API_URL = 'http://localhost:3000/api/auth';
-const API_URL = 'https://clinicahumanbcknd.onrender.com/api/auth';
+const API_URL = `${BASE_URL}/api/auth`;
 
 export const signUp = async (
   email: string,

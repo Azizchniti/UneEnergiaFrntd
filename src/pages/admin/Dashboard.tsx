@@ -16,19 +16,21 @@ import { Lead  } from '../../types/lead.types';
 import { LeadService } from "@/services/leads.service";
 
 const gradeColors = {
-  beginner: "bg-slate-500",
-  silver: "bg-blue-500",
-  gold: "bg-yellow-500",
-  platinum: "bg-violet-500",
-  diamond: "bg-emerald-500"
+  "Influenciadores / Celebridades": "bg-slate-500",
+  "Relações públicas": "bg-blue-500",
+  "Empresas": "bg-yellow-500",
+  "Funcionários e médicos": "bg-violet-500",
+  "Amigos e Familiares": "bg-emerald-500",
+  "Permuta": "bg-red-500"
 };
 
 const gradeLabels = {
-  beginner: "Beginner",
-  silver: "Silver",
-  gold: "Gold",
-  platinum: "Platinum",
-  diamond: "Diamond"
+  "Influenciadores / Celebridades": "Influenciadores / Celebridades",
+  "Relações públicas": "Relações públicas",
+  "Empresas": "Empresas",
+  "Funcionários e médicos": "Funcionários e médicos",
+  "Amigos e Familiares": "Amigos e Familiares",
+  "Permuta": "Permuta"
 };
 
 const AdminDashboard: React.FC = () => {
@@ -111,11 +113,12 @@ const AdminDashboard: React.FC = () => {
   }, {} as Record<MemberGrade, number>);
 
   const gradeChartData = [
-    // { name: "Beginner", value: memberGradeData. || 0, color: "#94a3b8" },
-    { name: "Silver", value: memberGradeData.silver || 0, color: "#3b82f6" },
-    { name: "Gold", value: memberGradeData.gold || 0, color: "#eab308" },
-    { name: "Platinum", value: memberGradeData.platinum || 0, color: "#8b5cf6" },
-    { name: "Diamond", value: memberGradeData.diamond || 0, color: "#10b981" }
+     { name: "Influenciadores / Celebridades", value: memberGradeData["Influenciadores / Celebridades"] || 0, color: "#94a3b8" },
+    { name: "Relações públicas", value: memberGradeData["Relações públicas"] || 0, color: "#3b82f6" },
+    { name: "Empresas", value: memberGradeData["Empresas"] || 0, color: "#eab308" },
+    { name: "Funcionários e médicos", value: memberGradeData["Funcionários e médicos"] || 0, color: "#8b5cf6" },
+    { name: "Amigos e Familiares", value: memberGradeData["Amigos e Familiares"] || 0, color: "#10b981" },
+    { name: "Permuta", value: memberGradeData["Permuta"] || 0, color: "#ef4444" }
   ];
 
   const isInRange = (dateInput: string | Date) => {
