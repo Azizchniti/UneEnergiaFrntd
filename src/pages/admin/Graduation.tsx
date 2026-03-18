@@ -463,7 +463,7 @@ function getEmbedUrl(url: string): string {
               <CardTitle className="text-xl font-bold">Cursos</CardTitle>
               <Dialog open={courseDialogOpen} onOpenChange={setCourseDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button onClick={() => {
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => {
                     setNewCourse({
                       title: "",
                       description: "",
@@ -472,7 +472,7 @@ function getEmbedUrl(url: string): string {
                     });
                     setIsEditingCourse(false);
                   }}>
-                    <Plus className="mr-2 h-4 w-4" />
+                    <Plus className="mr-2 h-4 w-4 " />
                     Adicionar Curso
                   </Button>
                 </DialogTrigger>
@@ -733,7 +733,7 @@ function getEmbedUrl(url: string): string {
               <CardTitle className="text-xl font-bold">Aulas</CardTitle>
               <Dialog open={classDialogOpen} onOpenChange={setClassDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button onClick={() => {
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => {
                     setNewClass({
                       title: "",
                       description: "",
@@ -876,7 +876,7 @@ function getEmbedUrl(url: string): string {
               <CardTitle className="text-xl font-bold">Certificações</CardTitle>
               <Dialog open={certificationDialogOpen} onOpenChange={setCertificationDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button onClick={() => {
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => {
                     setNewCertification({
                       title: "",
                       description: "",
@@ -1028,7 +1028,7 @@ function getEmbedUrl(url: string): string {
               <CardTitle className="text-xl font-bold">Trilhas de Aprendizado</CardTitle>
               <Dialog open={pathDialogOpen} onOpenChange={setPathDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button onClick={() => {
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => {
                     setNewPath({
                       title: "",
                       description: "",

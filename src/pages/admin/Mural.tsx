@@ -226,7 +226,7 @@ function localInputToUtc(inputValue: string): string {
               if (!open) resetForm();
             }}>
               <DialogTrigger asChild>
-                <Button onClick={() => {
+                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => {
                   resetForm();
                   setDialogOpen(true);
                 }}>

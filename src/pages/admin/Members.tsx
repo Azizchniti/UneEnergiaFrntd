@@ -463,7 +463,7 @@ const handleDeleteUser = async (userId: string) => {
         
         <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="space-x-2">
+            <Button className="space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white">
               <UserPlus className="h-4 w-4" />
               <span>Novo Membro</span>
             </Button>
