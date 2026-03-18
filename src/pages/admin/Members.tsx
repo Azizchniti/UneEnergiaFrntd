@@ -574,152 +574,183 @@ const handleDeleteUser = async (userId: string) => {
         </Dialog>
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Parceiros</CardTitle>
-          <CardDescription>
-            Gerencie todos os Parceiros cadastrados na plataforma.
-          </CardDescription>
-          
-          <div className="flex items-center space-x-2 mt-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Buscar por nome, email ou CPF..."
-                className="pl-8"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-        </CardHeader>
-        
-        <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead 
-                    className="cursor-pointer"
-                    onClick={() => requestSort('first_name')}
-                  >
-                    <div className="flex items-center">
-                      Nome
-                      {getSortIcon('first_name')}
-                    </div>
-                  </TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Telefone</TableHead>
-                  <TableHead 
-                    className="cursor-pointer"
-                    onClick={() => requestSort('grade')}
-                  >
-                    <div className="flex items-center">
-                      Graduação
-                      {getSortIcon('grade')}
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="cursor-pointer text-right"
-                    onClick={() => requestSort('total_sales')}
-                  >
-                    <div className="flex items-center justify-end">
-                      Vendas (R$)
-                      {getSortIcon('total_sales')}
-                    </div>
-                  </TableHead>
-                  <TableHead 
-                    className="cursor-pointer text-right"
-                    onClick={() => requestSort('total_contacts')}
-                  >
-                    <div className="flex items-center justify-end">
-                      Contatos
-                      {getSortIcon('total_contacts')}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              
-            <TableBody>
-              {members.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-6">
-                    <div className="flex flex-col items-center justify-center text-muted-foreground">
-                      <User className="h-10 w-10 mb-2" />
-                      <p>Nenhum membro encontrado</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                members.map((member) => {
-                  const user = userById.get(member.id); // find corresponding user/profile
-                  return (
-                    <TableRow key={member.id}>
-                      <TableCell className="font-medium">{member.first_name + " " + member.last_name}</TableCell>
-                      <TableCell>{user ? user.email : '—'}</TableCell>
-                      <TableCell>{member.phone}</TableCell>
-                      <TableCell>
-                        <Badge className={`${gradeColors[member.grade]}`}>
-                          {gradeLabels[member.grade]}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {new Intl.NumberFormat('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL',
-                        }).format(member.total_sales)}
-                      </TableCell>
-                      <TableCell className="text-right">{member.total_contacts}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end space-x-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleEditDialogOpen(member)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleDeleteDialogOpen(member)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="mt-6">
+     {/* =========================
+   PARCEIROS CARD
+========================= */}
+<Card>
   <CardHeader>
-    <CardTitle>Administradores</CardTitle>
-    <CardDescription>Usuários com funções administrativas na plataforma.</CardDescription>
+    <CardTitle>Lista de Parceiros</CardTitle>
+    <CardDescription>
+      Gerencie todos os Parceiros cadastrados na plataforma.
+    </CardDescription>
+
+    <div className="flex items-center justify-between mt-4 gap-4">
+      {/* SEARCH */}
+      <div className="relative flex-1">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="search"
+          placeholder="Buscar por nome, email ou CPF..."
+          className="pl-8"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+  
+    </div>
   </CardHeader>
 
   <CardContent>
     <div className="rounded-md border">
-      <Table>
+      <Table className="table-fixed">
+
         <TableHeader>
           <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Função</TableHead>
+
+            <TableHead 
+              className="w-[30%] cursor-pointer"
+              onClick={() => requestSort('first_name')}
+            >
+              <div className="flex items-center gap-1">
+                Nome
+                {getSortIcon('first_name')}
+              </div>
+            </TableHead>
+
+            <TableHead className="w-[30%]">Email</TableHead>
+
+            <TableHead className="w-[15%]">Telefone</TableHead>
+
+            <TableHead 
+              className="w-[15%] cursor-pointer text-center"
+              onClick={() => requestSort('grade')}
+            >
+              <div className="flex items-center justify-center gap-1">
+                Graduação
+                {getSortIcon('grade')}
+              </div>
+            </TableHead>
+
+            <TableHead className="w-[140px] text-right">Ações</TableHead>
+
           </TableRow>
         </TableHeader>
+
+        <TableBody>
+          {members.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center py-6">
+                <div className="flex flex-col items-center justify-center text-muted-foreground">
+                  <User className="h-10 w-10 mb-2" />
+                  <p>Nenhum membro encontrado</p>
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : (
+            members.map((member) => {
+              const user = userById.get(member.id);
+
+              return (
+                <TableRow key={member.id} className="hover:bg-white/5 transition">
+
+                  {/* NAME + AVATAR */}
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm font-semibold">
+                        {member.first_name?.[0]}
+                      </div>
+                      <span>
+                        {member.first_name} {member.last_name}
+                      </span>
+                    </div>
+                  </TableCell>
+
+                  {/* EMAIL */}
+                  <TableCell className="truncate max-w-[220px]">
+                    {user ? user.email : '—'}
+                  </TableCell>
+
+                  {/* PHONE */}
+                  <TableCell className="whitespace-nowrap">
+                    {member.phone || "—"}
+                  </TableCell>
+
+                  {/* GRADE */}
+                  <TableCell className="text-center">
+                    <Badge className={gradeColors[member.grade]}>
+                      {gradeLabels[member.grade]}
+                    </Badge>
+                  </TableCell>
+
+                  {/* ACTIONS */}
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditDialogOpen(member)}
+                        className="flex items-center gap-1 text-white/70 hover:text-white"
+                      >
+                        <Edit className="h-4 w-4" />
+                        Editar
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteDialogOpen(member)}
+                        className="text-red-400 hover:text-red-500"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+
+                    </div>
+                  </TableCell>
+
+                </TableRow>
+              );
+            })
+          )}
+        </TableBody>
+
+      </Table>
+    </div>
+  </CardContent>
+</Card>
+
+
+{/* =========================
+   ADMIN CARD
+========================= */}
+<Card className="mt-6">
+  <CardHeader>
+    <CardTitle>Administradores</CardTitle>
+    <CardDescription>
+      Usuários com funções administrativas na plataforma.
+    </CardDescription>
+  </CardHeader>
+
+  <CardContent>
+    <div className="rounded-md border">
+      <Table className="table-fixed">
+
+        <TableHeader>
+          <TableRow>
+
+            <TableHead className="w-[35%]">Nome</TableHead>
+            <TableHead className="w-[35%]">Email</TableHead>
+            <TableHead className="w-[15%] text-center">Função</TableHead>
+            <TableHead className="w-[140px] text-right">Ações</TableHead>
+
+          </TableRow>
+        </TableHeader>
+
         <TableBody>
           {admins.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={3} className="text-center py-6">
+              <TableCell colSpan={4} className="text-center py-6">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <User className="h-10 w-10 mb-2" />
                   <p>Nenhum administrador encontrado</p>
@@ -727,41 +758,68 @@ const handleDeleteUser = async (userId: string) => {
               </TableCell>
             </TableRow>
           ) : (
-            admins.map(admin => (
-              <TableRow key={admin.id}>
-                <TableCell className="font-medium">{admin.first_name + " " + admin.last_name}</TableCell>
-                <TableCell>{admin.email}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{admin.role}</Badge>
+            admins.map((admin) => (
+              <TableRow key={admin.id} className="hover:bg-white/5 transition">
+
+                {/* NAME */}
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-semibold">
+                      {admin.first_name?.[0]}
+                    </div>
+                    {admin.first_name} {admin.last_name}
+                  </div>
                 </TableCell>
+
+                {/* EMAIL */}
+                <TableCell className="truncate max-w-[220px]">
+                  {admin.email}
+                </TableCell>
+
+                {/* ROLE */}
+                <TableCell className="text-center">
+                  <Badge variant="outline">
+                    {admin.role}
+                  </Badge>
+                </TableCell>
+
+                {/* ACTIONS */}
                 <TableCell className="text-right">
-                <div className="flex items-center justify-end space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      handleEditAdminDialogOpen(admin);
-                      setSelectedUserId(admin.id);
-                    }}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setSelectedUserId(admin.id);
-                      setDeleteDialogOpen(true);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
+                  <div className="flex items-center justify-end gap-2">
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        handleEditAdminDialogOpen(admin);
+                        setSelectedUserId(admin.id);
+                      }}
+                      className="flex items-center gap-1 text-white/70 hover:text-white"
+                    >
+                      <Edit className="h-4 w-4" />
+                      Editar
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedUserId(admin.id);
+                        setDeleteDialogOpen(true);
+                      }}
+                      className="text-red-400 hover:text-red-500"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+
+                  </div>
+                </TableCell>
+
               </TableRow>
             ))
           )}
         </TableBody>
+
       </Table>
     </div>
   </CardContent>
