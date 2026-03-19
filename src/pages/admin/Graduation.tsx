@@ -112,7 +112,7 @@ const [editingMaterialId, setEditingMaterialId] = useState<string | null>(null);
       title: "",
       description: "",
       url: "",
-      path_id: ""
+      learning_path_id: ""
     });
     const [materialDialogOpen, setMaterialDialogOpen] = useState(false);
 
@@ -459,7 +459,7 @@ const handleAddMaterial = async () => {
     }
 
     // reset
-    setNewMaterial({ title: "", description: "", url: "", path_id: "" });
+    setNewMaterial({ title: "", description: "", url: "", learning_path_id: "" });
     setIsEditingMaterial(false);
     setEditingMaterialId(null);
     setMaterialDialogOpen(false);
@@ -1370,6 +1370,7 @@ const handleAddMaterial = async () => {
                       placeholder="Descrição"
                       value={newMaterial.description}
                       onChange={(e) => setNewMaterial({...newMaterial, description: e.target.value})}
+                       className="resize-none"
                     />
 
                     <Input
@@ -1381,8 +1382,8 @@ const handleAddMaterial = async () => {
                     {/* Select Path */}
                     <select
                       className="border rounded-md p-2 bg-background"
-                      value={newMaterial.path_id}
-                      onChange={(e) => setNewMaterial({...newMaterial, path_id: e.target.value})}
+                      value={newMaterial.learning_path_id}
+                      onChange={(e) => setNewMaterial({...newMaterial, learning_path_id: e.target.value})}
                     >
                       <option value="">Selecione uma trilha</option>
                       {paths.map(p => (
@@ -1406,7 +1407,7 @@ const handleAddMaterial = async () => {
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {materials.map((m) => {
-                    const path = paths.find(p => p.id === m.path_id);
+                    const path = paths.find(p => p.id === m.learning_path_id);
 
                     return (
                       <div
@@ -1444,7 +1445,7 @@ const handleAddMaterial = async () => {
                                           title: m.title,
                                           description: m.description,
                                           url: m.url,
-                                          path_id: m.path_id || ""
+                                          learning_path_id: m.learning_path_id || ""
                                         });
                                         setEditingMaterialId(m.id);
                                         setIsEditingMaterial(true);
